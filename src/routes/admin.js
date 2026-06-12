@@ -113,8 +113,8 @@ router.get('/dashboard', (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EbookVault — Admin Dashboard</title>
-  <meta name="description" content="Admin dashboard for managing ebook access and generating secure reader links" />
+  <title>VihaanFlow — Admin Dashboard</title>
+  <meta name="description" content="Admin dashboard for VihaanFlow Ebook Vault" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -613,6 +613,93 @@ router.get('/dashboard', (req, res) => {
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Background Circles Hero ─────────────────────────────── */
+    .circles-hero {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    /* diagonal grid lines */
+    .circles-grid {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(100,116,139,0.18) 0px,
+        rgba(100,116,139,0.18) 1px,
+        transparent 1px,
+        transparent 28px
+      );
+      mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 38%, black 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 38%, black 100%);
+    }
+
+    /* the big filled gradient blob */
+    .circles-blob {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      transition: background 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: blobPulse 7s ease-in-out infinite;
+    }
+    @keyframes blobPulse {
+      0%, 100% { transform: scale(1);    opacity: 0.88; }
+      50%       { transform: scale(1.05); opacity: 1; }
+    }
+
+    /* variant colours */
+    .blob-octonary  { background: radial-gradient(circle at 42% 38%, rgba(185,28,28,0.92) 0%, rgba(127,7,7,0.82) 38%, rgba(50,0,0,0.5) 68%, transparent 100%); }
+    .blob-primary   { background: radial-gradient(circle at 42% 38%, rgba(5,150,105,0.92) 0%, rgba(4,90,58,0.82) 38%, rgba(0,40,18,0.5) 68%, transparent 100%); }
+    .blob-secondary { background: radial-gradient(circle at 42% 38%, rgba(124,58,237,0.92) 0%, rgba(76,20,170,0.82) 38%, rgba(20,0,80,0.5) 68%, transparent 100%); }
+    .blob-tertiary  { background: radial-gradient(circle at 42% 38%, rgba(234,88,12,0.92) 0%, rgba(154,52,0,0.82) 38%, rgba(60,12,0,0.5) 68%, transparent 100%); }
+    .blob-senary    { background: radial-gradient(circle at 42% 38%, rgba(37,99,235,0.92) 0%, rgba(14,55,148,0.82) 38%, rgba(0,8,55,0.5) 68%, transparent 100%); }
+
+    /* text */
+    .circles-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      animation: fadeUp 1s ease-out both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .circles-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 10px;
+    }
+    .circles-title {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: #fff;
+      line-height: 1.1;
+      text-shadow: 0 4px 32px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .circles-sub {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+      font-weight: 400;
+    }
   </style>
 </head>
 <body>
@@ -624,8 +711,8 @@ router.get('/dashboard', (req, res) => {
     <div class="sidebar-logo">
       <div class="logo-box">📚</div>
       <div>
-        <div class="logo-text">EbookVault</div>
-        <div class="logo-sub">Admin Panel</div>
+        <div class="logo-text">VihaanFlow</div>
+        <div class="logo-sub">Ebook Vault &middot; Admin</div>
       </div>
     </div>
 
@@ -653,8 +740,8 @@ router.get('/dashboard', (req, res) => {
     </div>
 
     <div class="sidebar-footer">
-      <p>EbookVault v1.0</p>
-      <p style="margin-top:2px;">Secure delivery platform</p>
+      <p>VihaanFlow v1.0</p>
+      <p style="margin-top:2px;">Ebook Vault Platform</p>
     </div>
   </aside>
 
@@ -667,6 +754,17 @@ router.get('/dashboard', (req, res) => {
         <div>
           <div class="page-title">Welcome back, <span>Admin</span> 👋</div>
           <div style="font-size:0.85rem;color:var(--text-2);margin-top:4px;">Here's what's happening with your ebooks today.</div>
+        </div>
+      </div>
+
+      <!-- ── Background Circles Hero ──────────────────────────── -->
+      <div class="circles-hero">
+        <div class="circles-grid"></div>
+        <div class="circles-blob blob-octonary" id="circles-blob"></div>
+        <div class="circles-content">
+          <div class="circles-eyebrow">Welcome back, Admin</div>
+          <div class="circles-title">VihaanFlow Ebook Vault</div>
+          <div class="circles-sub">Secure &middot; Watermarked &middot; Delivered Instantly</div>
         </div>
       </div>
 
@@ -1284,6 +1382,19 @@ router.get('/dashboard', (req, res) => {
 
   // ── Init ───────────────────────────────────────────────────────────────────
   loadDashboard();
+
+  // ── Background Circles – Auto-cycling variants ─────────────────────────────
+  const CIRCLE_VARIANTS = ['blob-octonary','blob-primary','blob-secondary','blob-tertiary','blob-senary'];
+  let _circleIdx = 0;
+  (function autoCycleBlob() {
+    setInterval(() => {
+      const blob = document.getElementById('circles-blob');
+      if (!blob) return;
+      blob.classList.remove(...CIRCLE_VARIANTS);
+      _circleIdx = (_circleIdx + 1) % CIRCLE_VARIANTS.length;
+      blob.classList.add(CIRCLE_VARIANTS[_circleIdx]);
+    }, 4000);
+  })();
 </script>
 
 </body>
