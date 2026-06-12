@@ -106,7 +106,7 @@ router.get('/purchases', async (req, res) => {
 
 // ─── GET /api/admin/dashboard ────────────────────────────────────────────────
 router.get('/dashboard', (req, res) => {
-  const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+  const BASE_URL = `${req.protocol}://${req.get('host')}`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">

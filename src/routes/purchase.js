@@ -8,7 +8,6 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../services/db');
 const { signToken } = require('../services/tokenService');
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
 /**
  * POST /api/purchase
@@ -75,8 +74,9 @@ router.post('/', async (req, res) => {
 
     if (error) throw error;
 
-    // ── Build reader URL ───────────────────────────────────────────────────
-    const readerUrl = `${BASE_URL}/api/read/viewer?token=${token}`;
+    // ── Build reader URL dynamically based on the request host ─────────────
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const readerUrl = `${baseUrl}/api/read/viewer?token=${token}`;
 
     return res.status(201).json({
       success: true,
