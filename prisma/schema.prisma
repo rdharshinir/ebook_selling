@@ -1,0 +1,46 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Transaction Pooler URL (used by the running app — pgbouncer=true)
+  url       = env("DATABASE_URL")
+  // Direct connection URL (used ONLY by prisma db push / migrate)
+  directUrl = env("DIRECT_URL")
+}
+
+model Customer {
+  id        String     @id @default(cuid())
+  name      String
+  phone     String
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  purchases Purchase[]
+}
+
+model Book {
+  id        String     @id @default(cuid())
+  title     String
+  s3Key     String     // private S3 object key, never exposed
+  createdAt DateTime   @default(now())
+  purchases Purchase[]
+}
+
+model Purchase {
+  id         String    @id @default(cuid())
+  customerId String
+  bookId     String
+  token      String    @unique
+  expiresAt  DateTime?               // null = lifetime access
+  openCount  Int       @default(0)
+  maxOpens   Int       @default(5)
+  isRevoked  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  book       Book      @relation(fields: [bookId], references: [id])
+}

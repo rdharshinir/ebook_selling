@@ -1,0 +1,28 @@
+{
+  "name": "ebook-delivery-platform",
+  "version": "1.0.0",
+  "description": "Self-hosted secure ebook delivery platform with JWT access control, Supabase storage, and watermarked PDF streaming",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pdf-lib": "^1.17.1",
+    "prisma": "^5.15.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
