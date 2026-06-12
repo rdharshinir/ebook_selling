@@ -897,7 +897,7 @@ router.get('/dashboard', (req, res) => {
 </div>
 
 <script>
-  const BASE = '${BASE_URL}';
+  const BASE = '';
   let currentUrl = '';
 
   // ── Navigation ─────────────────────────────────────────────────────────────

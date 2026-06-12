@@ -75,7 +75,8 @@ router.post('/', async (req, res) => {
     if (error) throw error;
 
     // ── Build reader URL dynamically based on the request host ─────────────
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const baseUrl = `${protocol}://${req.get('host')}`;
     const readerUrl = `${baseUrl}/api/read/viewer?token=${token}`;
 
     return res.status(201).json({
