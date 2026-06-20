@@ -15,6 +15,7 @@ const purchaseRouter = require('./routes/purchase');
 const readerRouter   = require('./routes/reader');
 const adminRouter    = require('./routes/admin');
 const revokeRouter   = require('./routes/revoke');
+const webhookRouter  = require('./routes/webhook');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +43,7 @@ app.use('/api/purchase',        purchaseRouter);
 app.use('/api/read',            readerRouter);
 app.use('/api/admin',           adminRouter);
 app.use('/api/revoke',          revokeRouter);
+app.use('/api/webhooks',        webhookRouter);
 
 // ── Root redirect to admin dashboard ─────────────────────────────────────────
 app.get('/', (req, res) => {

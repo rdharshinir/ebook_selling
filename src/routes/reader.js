@@ -414,53 +414,253 @@ router.get('/viewer', async (req, res) => {
       -webkit-user-select: none;
     }
 
-    /* ── Anti-Screenshot & Fullscreen Gate ──────────────── */
+    /* ═══════════════════════════════════════════════════════════
+       PREMIUM SECURITY OVERLAY
+    ═══════════════════════════════════════════════════════════ */
     .security-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(13, 13, 20, 0.98);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
       z-index: 1000;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.15s ease;
+      overflow: hidden;
+      transition: opacity 0.2s ease;
+      background: #000;
     }
     .security-overlay.hidden {
       opacity: 0;
       pointer-events: none;
     }
+
+    /* animated diagonal grid */
+    .so-grid {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(100,116,139,0.15) 0px,
+        rgba(100,116,139,0.15) 1px,
+        transparent 1px,
+        transparent 28px
+      );
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 35%, black 100%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 35%, black 100%);
+    }
+
+    /* large glowing blob behind the card */
+    .so-blob {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 45% 40%,
+        rgba(124,58,237,0.55) 0%,
+        rgba(79,20,180,0.45) 35%,
+        rgba(30,0,80,0.3) 60%,
+        transparent 100%
+      );
+      animation: soblobPulse 8s ease-in-out infinite;
+      filter: blur(2px);
+    }
+    @keyframes soblobPulse {
+      0%,100% { transform: scale(1) rotate(0deg);   opacity: 0.8; }
+      50%      { transform: scale(1.08) rotate(8deg); opacity: 1; }
+    }
+
+    /* floating orbs */
+    .so-orb {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      animation: soFloat linear infinite;
+      filter: blur(0px);
+    }
+    .so-orb:nth-child(1) { width:10px; height:10px; background:#a78bfa; top:15%; left:12%; animation-duration:6s; animation-delay:0s; }
+    .so-orb:nth-child(2) { width:6px;  height:6px;  background:#7c3aed; top:70%; left:20%; animation-duration:8s; animation-delay:1s; }
+    .so-orb:nth-child(3) { width:8px;  height:8px;  background:#c4b5fd; top:30%; left:80%; animation-duration:7s; animation-delay:2s; }
+    .so-orb:nth-child(4) { width:5px;  height:5px;  background:#ddd6fe; top:80%; left:75%; animation-duration:9s; animation-delay:0.5s; }
+    .so-orb:nth-child(5) { width:12px; height:12px; background:#8b5cf6; top:50%; left:5%;  animation-duration:5s; animation-delay:3s; }
+    .so-orb:nth-child(6) { width:7px;  height:7px;  background:#a78bfa; top:20%; left:55%; animation-duration:10s; animation-delay:1.5s; }
+    @keyframes soFloat {
+      0%   { transform: translateY(0px) scale(1); opacity: 0.25; }
+      50%  { transform: translateY(-22px) scale(1.2); opacity: 0.5; }
+      100% { transform: translateY(0px) scale(1); opacity: 0.25; }
+    }
+
+    /* glass card */
+    .so-card {
+      position: relative;
+      z-index: 10;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 56px 48px 48px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 32px 80px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      animation: soCardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes soCardIn {
+      from { opacity: 0; transform: translateY(32px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* lock icon ring */
+    .so-icon-ring {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(167,139,250,0.15));
+      border: 1px solid rgba(167,139,250,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      font-size: 38px;
+      animation: soIconPulse 3s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(124,58,237,0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    @keyframes soIconPulse {
+      0%,100% { box-shadow: 0 0 30px rgba(124,58,237,0.25), inset 0 1px 0 rgba(255,255,255,0.08); }
+      50%      { box-shadow: 0 0 50px rgba(124,58,237,0.45), inset 0 1px 0 rgba(255,255,255,0.08); }
+    }
+
+    .so-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 10px;
+    }
+    .so-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .so-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    /* CTA button */
     .security-btn {
-      padding: 14px 28px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 34px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(124,58,237,0.4);
-      margin-top: 20px;
+      letter-spacing: 0.01em;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.1),
+        0 8px 24px rgba(124,58,237,0.45),
+        0 2px 4px rgba(0,0,0,0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      overflow: hidden;
     }
+    .security-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .security-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.12),
+        0 16px 40px rgba(124,58,237,0.55),
+        0 4px 8px rgba(0,0,0,0.3);
+    }
+    .security-btn:hover::before { opacity: 1; }
+    .security-btn:active { transform: translateY(0); }
+    .security-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* status text below button */
     .security-text {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      max-width: 400px;
-      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
       line-height: 1.5;
+    }
+
+    /* bottom brand strip */
+    .so-brand {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.03em;
+    }
+    .so-brand-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(167,139,250,0.4);
     }
   </style>
 </head>
 <body>
 
-  <!-- Security Overlay -->
+  <!-- Premium Security Overlay -->
   <div class="security-overlay" id="security-overlay">
-    <div style="font-size: 54px;">🔒</div>
-    <button class="security-btn" id="start-reading-btn">Start Reading in Full Screen</button>
-    <p class="security-text">To protect this document, reading is only allowed in full screen. The document will be hidden if you switch away.</p>
+    <!-- background layers -->
+    <div class="so-grid"></div>
+    <div class="so-blob"></div>
+    <div class="so-orb"></div>
+    <div class="so-orb"></div>
+    <div class="so-orb"></div>
+    <div class="so-orb"></div>
+    <div class="so-orb"></div>
+    <div class="so-orb"></div>
+
+    <!-- glass card -->
+    <div class="so-card">
+      <div class="so-icon-ring">🔐</div>
+      <div class="so-eyebrow">VihaanFlow Ebook Vault</div>
+      <h1 class="so-title">Secure Reading Mode</h1>
+      <p class="so-desc" id="security-overlay-desc">
+        This document is protected. Full-screen mode is required to read it.
+        The content will be hidden if you leave full screen.
+      </p>
+      <button class="security-btn" id="start-reading-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+        Start Reading in Full Screen
+      </button>
+      <p class="security-text" id="security-text">Your session is encrypted and watermarked.</p>
+      <div class="so-brand">
+        <span class="so-brand-dot"></span>
+        Protected by VihaanFlow Ebook Vault
+        <span class="so-brand-dot"></span>
+      </div>
+    </div>
   </div>
 
   <!-- Header -->
@@ -559,7 +759,7 @@ router.get('/viewer', async (req, res) => {
     // ── Fullscreen & Anti-Screenshot Logic ────────────────────────────────
     const securityOverlay = document.getElementById('security-overlay');
     const startBtn = document.getElementById('start-reading-btn');
-    const securityText = securityOverlay.querySelector('.security-text');
+    const securityText = document.getElementById('security-text');
 
     startBtn.addEventListener('click', async () => {
       try {
