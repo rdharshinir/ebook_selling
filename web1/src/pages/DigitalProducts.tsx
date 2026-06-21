@@ -63,7 +63,6 @@ export default function DigitalProducts() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -94,7 +93,6 @@ export default function DigitalProducts() {
   );
 
   const handleSelectBook = (book: Book) => {
-    setSelectedBook(book);
     localStorage.setItem("vf_checkout_book", JSON.stringify(book));
   };
 
