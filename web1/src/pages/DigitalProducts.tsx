@@ -13,52 +13,6 @@ interface Book {
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-// Demo/fallback books shown when backend isn't running or has no data
-const DEMO_BOOKS: Book[] = [
-  {
-    id: "demo-1",
-    title: "The Ultimate Digital Marketing Playbook",
-    description: "Master Facebook Ads, Instagram growth, and WhatsApp automation strategies used by India's top clinics and businesses.",
-    price: 49900,
-    coverUrl: null,
-  },
-  {
-    id: "demo-2",
-    title: "AI Tools for Entrepreneurs: 2024 Edition",
-    description: "Discover 50+ AI tools that automate your business workflows, save 10+ hours a week and multiply your revenue.",
-    price: 79900,
-    coverUrl: null,
-  },
-  {
-    id: "demo-3",
-    title: "WhatsApp Business Mastery",
-    description: "The complete guide to building a WhatsApp sales funnel that converts cold leads into paying customers on autopilot.",
-    price: 34900,
-    coverUrl: null,
-  },
-  {
-    id: "demo-4",
-    title: "Clinic Growth Formula",
-    description: "A step-by-step blueprint for dental and healthcare clinics to attract 50+ new patients every month through digital channels.",
-    price: 99900,
-    coverUrl: null,
-  },
-  {
-    id: "demo-5",
-    title: "Email Marketing That Sells",
-    description: "Write emails your subscribers actually open. Proven sequences, subject lines, and automation flows for Indian businesses.",
-    price: 29900,
-    coverUrl: null,
-  },
-  {
-    id: "demo-6",
-    title: "The Freelancer's Financial Blueprint",
-    description: "Pricing strategies, client acquisition scripts, and passive income models that took India's top freelancers to ₹1L+ months.",
-    price: 59900,
-    coverUrl: null,
-  },
-];
-
 export default function DigitalProducts() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,15 +23,13 @@ export default function DigitalProducts() {
       try {
         const res = await fetch(`${API_BASE}/api/store/books`);
         const data = await res.json();
-        if (data.success && data.books.length > 0) {
+        if (data.success && data.books) {
           setBooks(data.books);
         } else {
-          // Fallback to demo books if no books in DB yet
-          setBooks(DEMO_BOOKS);
+          setBooks([]);
         }
       } catch {
-        // Backend may not be running in dev — use demo books
-        setBooks(DEMO_BOOKS);
+        setBooks([]);
       } finally {
         setLoading(false);
       }
@@ -85,6 +37,7 @@ export default function DigitalProducts() {
 
     fetchBooks();
   }, []);
+
 
   const filteredBooks = books.filter(
     (b) =>

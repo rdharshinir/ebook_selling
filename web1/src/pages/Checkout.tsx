@@ -48,6 +48,7 @@ interface RazorpayOptions {
   handler: (response: RazorpayResponse) => void;
   prefill: { name: string; email: string };
   theme: { color: string };
+  notes?: Record<string, string>;
   modal: { ondismiss: () => void };
 }
 
@@ -69,6 +70,7 @@ export default function Checkout() {
   const [loadingBook, setLoadingBook] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [language, setLanguage] = useState("English");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -145,6 +147,7 @@ export default function Checkout() {
         order_id: orderData.orderId,
         prefill: { name, email },
         theme: { color: "#f59e0b" },
+        notes: { language },
         modal: {
           ondismiss: () => {
             setProcessing(false);
@@ -350,6 +353,31 @@ export default function Checkout() {
                     className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-400 transition-all placeholder:text-zinc-400"
                   />
                   <p className="text-xs text-zinc-400 mt-1.5">Your ebook download link will be sent here.</p>
+                </div>
+
+                <div>
+                  <label htmlFor="checkout-language" className="block text-sm font-medium text-zinc-700 mb-1.5">
+                    Select Ebook Language <span className="text-orange-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="checkout-language"
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-400 transition-all appearance-none cursor-pointer font-medium"
+                    >
+                      <option value="English">English</option>
+                      <option value="Tamil">Tamil</option>
+                      <option value="Telugu">Telugu</option>
+                      <option value="Hindi">Hindi</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-500">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Divider */}
