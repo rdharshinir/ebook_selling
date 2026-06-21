@@ -11,17 +11,26 @@ const cors    = require('cors');
 const path    = require('path');
 
 // ── Route imports ─────────────────────────────────────────────────────────────
-const purchaseRouter = require('./routes/purchase');
-const readerRouter   = require('./routes/reader');
-const adminRouter    = require('./routes/admin');
-const revokeRouter   = require('./routes/revoke');
-const webhookRouter  = require('./routes/webhook');
+const purchaseRouter  = require('./routes/purchase');
+const readerRouter    = require('./routes/reader');
+const adminRouter     = require('./routes/admin');
+const revokeRouter    = require('./routes/revoke');
+const webhookRouter   = require('./routes/webhook');
+const storeRouter     = require('./routes/store');
+const razorpayRouter  = require('./routes/razorpay');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -44,6 +53,8 @@ app.use('/api/read',            readerRouter);
 app.use('/api/admin',           adminRouter);
 app.use('/api/revoke',          revokeRouter);
 app.use('/api/webhooks',        webhookRouter);
+app.use('/api/store',           storeRouter);
+app.use('/api/razorpay',        razorpayRouter);
 
 // ── Root redirect to admin dashboard ─────────────────────────────────────────
 app.get('/', (req, res) => {
@@ -86,6 +97,9 @@ app.listen(PORT, () => {
   console.log('    GET  /api/admin/dashboard   — Admin panel');
   console.log('    GET  /api/admin/customers   — Customers list');
   console.log('    GET  /api/admin/books       — Books list');
+  console.log('    GET  /api/store/books       — Public store listing');
+  console.log('    POST /api/razorpay/create-order — Create Razorpay order');
+  console.log('    POST /api/razorpay/verify   — Verify payment & deliver ebook');
   console.log('');
 });
 
